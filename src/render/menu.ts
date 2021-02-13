@@ -1,3 +1,26 @@
+// these were exposed by the context bridge in the preload script
+interface Window {
+  electronMenu: {
+    hide: () => void;
+    exit: () => void;
+  };
+}
+
+const menuItemActions = {
+  start: () => {
+    alert("start");
+  },
+  stop: () => {
+    alert("stop");
+  },
+  hide: () => {
+    window.electronMenu.hide();
+  },
+  exit: () => {
+    window.electronMenu.exit();
+  },
+};
+
 window.onload = () => {
   const menuItemElements = document.querySelectorAll(
     "[class$=-menu-item]"
@@ -21,7 +44,7 @@ window.onload = () => {
         return;
       }
 
-      alert(menuItemName);
+      menuItemActions[menuItemName]();
     });
   }
 };

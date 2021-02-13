@@ -1,11 +1,13 @@
-import { app } from "electron";
+import { app, ipcMain } from "electron";
 import { BrowserWindow } from "electron/main";
 import * as path from "path";
 
 const [MENU_WIN_W, MENU_WIN_H] = [200, 50];
 
 app.on("ready", () => {
-  createMenuWindow();
+  const menuWindow = createMenuWindow();
+
+  setupCommunicationWithMenu(menuWindow);
 });
 
 function createMenuWindow() {
@@ -17,7 +19,7 @@ function createMenuWindow() {
     show: false,
     webPreferences: {
       contextIsolation: true,
-      //preload: path.join(__dirname, 'preload', 'menu.js'),
+      preload: path.join(__dirname, "preload", "menu.js"),
     },
   });
 
@@ -26,5 +28,22 @@ function createMenuWindow() {
   menuWindow.on("ready-to-show", () => {
     menuWindow.setPosition(900, 100);
     menuWindow.show();
+  });
+
+  // show menu window after hidden
+  app.on("activate", () => {
+    menuWindow.show();
+  });
+
+  return menuWindow;
+}
+
+function setupCommunicationWithMenu(menuWindow: BrowserWindow) {
+  ipcMain.on("exit", () => {
+    app.quit();
+  });
+
+  ipcMain.on("hide", () => {
+    menuWindow.hide();
   });
 }

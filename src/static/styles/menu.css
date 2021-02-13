@@ -1,5 +1,8 @@
-body {
+html {
   -webkit-app-region: drag;
+}
+
+body {
   background-color: #333;
   margin: 0;
   width: 200px;
