@@ -30,7 +30,6 @@ window.onload = () => {
 };
 
 function addText(subtitleElement: HTMLSpanElement, text: string) {
-  log(text);
   subtitleElement.innerText += text;
 
   let lines = subtitleElement.innerText.split("\n");

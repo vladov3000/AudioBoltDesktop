@@ -1,3 +1,5 @@
 dist
 node_modules
 .vscode
+test/temp-audio
+.DS_Store

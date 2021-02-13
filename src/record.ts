@@ -23,26 +23,47 @@ export class Recorder {
         closeOnError: true,
       },
     });
+
+    this.ai.on("error", (e) => {
+      console.log("[record] ai error:");
+      console.log(e);
+    });
+
+    this.ai.on("data", (data: Buffer) => {
+      console.log("[record] data available from ai:");
+      console.log(data);
+
+      if (this.socket) {
+        const bufferSize = new Uint8Array([
+          (data.length & 0xff000000) >> 24,
+          (data.length & 0x00ff0000) >> 16,
+          (data.length & 0x0000ff00) >> 8,
+          data.length & 0x000000ff,
+        ]);
+        this.socket.write(bufferSize);
+      }
+    });
+
+    return this.ai;
   }
 
   createSocket() {
     this.socket = net.connect({ host: "localhost", port: 8080 }, () => {
       console.log("[record] connected to server");
-      if (this.ai && this.socket) {
-        this.ai.pipe(this.socket);
-      }
     });
 
     this.socket.on("error", (e) => {
-      console.log("[record] error:");
+      console.log("[record] socket error:");
       console.log(e);
     });
 
     this.socket.on("data", (data) => {
-      console.log(`[record] data:`);
+      console.log(`[record] data from socket:`);
       console.log(data);
       this.onTextBack(data.toString());
     });
+
+    return this.socket;
   }
 
   start() {
@@ -53,12 +74,12 @@ export class Recorder {
       this.socket.end();
     }
 
-    this.createAI();
-    this.createSocket();
+    const ai = this.createAI();
+    const socket = this.createSocket();
 
-    if (this.ai) {
-      this.ai.start();
-    }
+    ai.pipe(socket);
+    ai.start();
+    setTimeout(ai.read, 1000);
   }
 
   stop() {
