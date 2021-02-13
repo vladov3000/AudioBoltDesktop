@@ -1,7 +1,7 @@
-import { create } from "domain";
 import { app, ipcMain } from "electron";
 import { BrowserWindow } from "electron/main";
 import * as path from "path";
+import { Recorder } from "./record";
 
 const [MENU_WIN_W, MENU_WIN_H] = [200, 50];
 const INIT_SUBTITLE_FONT_SIZE = 50;
@@ -9,8 +9,9 @@ const INIT_SUBTITLE_FONT_SIZE = 50;
 app.on("ready", () => {
   const menuWindow = createMenuWindow();
   const subtitleWindow = createSubtitleWindow();
+  const recorder = new Recorder((text) => addSubtitle(subtitleWindow, text));
 
-  setupCommunication(menuWindow, subtitleWindow);
+  setupCommunication(menuWindow, subtitleWindow, recorder);
 });
 
 function createMenuWindow() {
@@ -73,39 +74,51 @@ function createSubtitleWindow() {
 
 function setupCommunication(
   menuWindow: BrowserWindow,
-  subtitleWindow: BrowserWindow
+  subtitleWindow: BrowserWindow,
+  recorder: Recorder
 ) {
   ipcMain.on("log", (_, source: string, text: string) => {
     console.log(`[${source}] ${text}`);
   });
 
   // Communcation with menu renderer
-  let count = 0;
-
   ipcMain.on("start", () => {
-    if (!subtitleWindow.isVisible()) subtitleWindow.showInactive();
-    subtitleWindow.webContents.send("newSubtitle", `hello world ${++count}.\n`);
     console.log("[menu] start");
+    recorder.start();
   });
 
   ipcMain.on("stop", () => {
     console.log("[menu] stop");
+    recorder.stop();
   });
 
   ipcMain.on("hide", () => {
+    console.log("[menu] hide");
+
     subtitleWindow.hide();
     menuWindow.hide();
   });
 
   ipcMain.on("exit", () => {
+    console.log("[menu] exit");
+
     app.quit();
   });
 
   // Communication with subtitle renderer
   ipcMain.on("resize", (_, w: number, h: number) => {
+    console.log("[subtitle] resize");
+
     w = Math.floor(w);
     h = Math.floor(h);
 
     subtitleWindow.setSize(w, h);
   });
+}
+
+function addSubtitle(subtitleWindow: BrowserWindow, subtitle: string) {
+  if (!subtitleWindow.isVisible()) {
+    subtitleWindow.showInactive();
+  }
+  subtitleWindow.webContents.send("newSubtitle", subtitle);
 }
