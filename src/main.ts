@@ -1,10 +1,10 @@
-import { app } from 'electron';
-import { BrowserWindow } from 'electron/main';
-import * as path from 'path';
+import { app } from "electron";
+import { BrowserWindow } from "electron/main";
+import * as path from "path";
 
-const [MENU_WIN_W, MENU_WIN_H] = [350, 50];
+const [MENU_WIN_W, MENU_WIN_H] = [200, 50];
 
-app.on('ready', () => {
+app.on("ready", () => {
   createMenuWindow();
 });
 
@@ -21,9 +21,9 @@ function createMenuWindow() {
     },
   });
 
-  menuWindow.loadFile(path.join('static', 'menu.html'));
+  menuWindow.loadFile(path.join("static", "menu.html"));
 
-  menuWindow.on('ready-to-show', () => {
+  menuWindow.on("ready-to-show", () => {
     menuWindow.setPosition(900, 100);
     menuWindow.show();
   });
