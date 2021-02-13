@@ -1,24 +1,23 @@
 // these were exposed by the context bridge in the preload script
 interface Window {
   electronMenu: {
+    log: (text: string) => void;
+    start: () => void;
+    stop: () => void;
     hide: () => void;
     exit: () => void;
   };
 }
 
+window.onerror = (e) => {
+  window.electronSubtitle.log(`Error: ${e}`);
+};
+
 const menuItemActions = {
-  start: () => {
-    alert("start");
-  },
-  stop: () => {
-    alert("stop");
-  },
-  hide: () => {
-    window.electronMenu.hide();
-  },
-  exit: () => {
-    window.electronMenu.exit();
-  },
+  start: window.electronMenu.start,
+  stop: window.electronMenu.stop,
+  hide: window.electronMenu.hide,
+  exit: window.electronMenu.exit,
 };
 
 window.onload = () => {
