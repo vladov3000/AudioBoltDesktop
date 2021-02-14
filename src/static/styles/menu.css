@@ -23,7 +23,7 @@ html {
 body {
   background-color: #333;
   margin: 0;
-  width: 200px;
+  width: 250px;
 }
 
 [class$="-menu-item"] {

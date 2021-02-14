@@ -3,7 +3,7 @@ import { BrowserWindow } from "electron/main";
 import * as path from "path";
 import { Recorder } from "./record";
 
-const [MENU_WIN_W, MENU_WIN_H] = [200, 50];
+const [MENU_WIN_W, MENU_WIN_H] = [250, 50];
 const INIT_SUBTITLE_FONT_SIZE = 50;
 
 app.on("ready", () => {
