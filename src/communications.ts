@@ -79,7 +79,7 @@ export function setupCommunication(
     console.log(newConfig);
 
     config = newConfig;
-    subtitleWindow.setSize(subtitleWindow.getSize[0], config.subtitleFontSize);
+    setSubtitleFontSize(subtitleWindow, `${config.subtitleFontSize}px`);
   });
 }
 
@@ -98,4 +98,11 @@ function setInitConfig(settingsWindow: BrowserWindow, config: Config) {
   settingsWindow.webContents.on("did-finish-load", () =>
     settingsWindow.webContents.send("initconfig", JSON.stringify(config))
   );
+}
+
+export function setSubtitleFontSize(
+  subtitleWindow: BrowserWindow,
+  fontSize: string
+) {
+  subtitleWindow.webContents.send("setFontSize", fontSize);
 }

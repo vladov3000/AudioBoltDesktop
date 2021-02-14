@@ -1,5 +1,9 @@
 import { app } from "electron";
-import { addSubtitle, setupCommunication } from "./communications";
+import {
+  addSubtitle,
+  setSubtitleFontSize,
+  setupCommunication,
+} from "./communications";
 import { Recorder } from "./record";
 import {
   createMenuWindow,
@@ -15,6 +19,7 @@ app.on("ready", () => {
     showTranscript: false,
     subtitleFontSize: INIT_SUBTITLE_FONT_SIZE,
   };
+  setSubtitleFontSize(subtitleWindow, `${INIT_SUBTITLE_FONT_SIZE}px`);
 
   setupCommunication(menuWindow, subtitleWindow, recorder, config);
 });

@@ -6,6 +6,9 @@ interface Window {
     onNewSubtitle: (
       callback: (e: Electron.IpcRendererEvent, text: string) => void
     ) => void;
+    onNewFontSize: (
+      callback: (e: Electron.IpcRendererEvent, fontSize: string) => void
+    ) => void;
   };
 }
 
@@ -24,6 +27,11 @@ window.onload = () => {
 
   window.electronSubtitle.onNewSubtitle((_, text) => {
     addText(subtitleElement, text);
+    updateWindowSize(subtitleElement);
+  });
+
+  window.electronSubtitle.onNewFontSize((_, fontSize) => {
+    subtitleElement.style.fontSize = fontSize;
     updateWindowSize(subtitleElement);
   });
 };

@@ -6,4 +6,7 @@ contextBridge.exposeInMainWorld("electronSubtitle", {
   onNewSubtitle: (
     callback: (e: Electron.IpcRendererEvent, text: string) => void
   ) => ipcRenderer.on("newSubtitle", callback),
+  onNewFontSize: (
+    callback: (e: Electron.IpcRendererEvent, fontSize: string) => void
+  ) => ipcRenderer.on("setFontSize", callback),
 });
