@@ -14,23 +14,50 @@ window.onerror = (e) => {
   window.electronSubtitle.log(`Error: ${e}`);
 };
 
-const menuItemActions = {
-  start: window.electronMenu.start,
-  stop: window.electronMenu.stop,
-  settings: window.electronMenu.settings,
-  hide: window.electronMenu.hide,
-  exit: window.electronMenu.exit,
-};
-
 window.onload = () => {
-  const menuItemElements = document.querySelectorAll(
+  const menuItemElementsList = document.querySelectorAll(
     "[class$=-menu-item]"
   ) as NodeListOf<HTMLDivElement>;
 
   let lastMousedown: MouseEvent | null = null;
 
-  for (const menuItemElement of menuItemElements) {
+  const menuItemElements: { string?: HTMLDivElement } = {};
+
+  function toggleStartStopElements() {
+    const startElement = menuItemElements["start"] as
+      | HTMLDivElement
+      | undefined;
+    const stopElement = menuItemElements["stop"] as HTMLDivElement | undefined;
+
+    if (!startElement) {
+      window.electronMenu.log("could not find start element");
+      return;
+    }
+    if (!stopElement) {
+      window.electronMenu.log("could not find stop element");
+      return;
+    }
+    startElement.hidden = !startElement?.hidden;
+    stopElement.hidden = !stopElement?.hidden;
+  }
+
+  const menuItemActions = {
+    start: () => {
+      toggleStartStopElements();
+      window.electronMenu.start();
+    },
+    stop: () => {
+      toggleStartStopElements();
+      window.electronMenu.stop;
+    },
+    settings: window.electronMenu.settings,
+    hide: window.electronMenu.hide,
+    exit: window.electronMenu.exit,
+  };
+
+  for (const menuItemElement of menuItemElementsList) {
     const menuItemName = menuItemElement.className.replace("-menu-item", "");
+    menuItemElements[menuItemName] = menuItemElement;
 
     menuItemElement.addEventListener("mousedown", (e) => {
       lastMousedown = e;

@@ -1,7 +1,7 @@
 import { BrowserWindow, app } from "electron";
 import * as path from "path";
 
-const [MENU_WIN_W, MENU_WIN_H] = [250, 50];
+const [MENU_WIN_W, MENU_WIN_H] = [200, 50];
 export const INIT_SUBTITLE_FONT_SIZE = 50;
 const [SETTINGS_WIN_W, SETTINGS_WIN_H] = [450, 450];
 const [TRANSCRIPT_WIN_W, TRANSCRIPT_WIN_H] = [700, 400];
