@@ -3,6 +3,8 @@ import * as portAudio from "naudiodon";
 import * as net from "net";
 
 const SECONDS_PER_INFERENCE = 20;
+const HOST = "104.154.202.254";
+const PORT = 8086;
 
 export class Recorder {
   ai: portAudio.IoStreamRead | null;
@@ -54,7 +56,7 @@ export class Recorder {
   }
 
   createSocket() {
-    this.socket = net.connect({ host: "localhost", port: 8080 }, () => {
+    this.socket = net.connect({ host: HOST, port: PORT }, () => {
       console.log("[record] connected to server");
     });
 
