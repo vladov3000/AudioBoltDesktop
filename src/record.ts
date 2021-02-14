@@ -1,7 +1,7 @@
 import * as portAudio from "naudiodon";
 import * as net from "net";
 
-const SECONDS_PER_INFERENCE = 10;
+const SECONDS_PER_INFERENCE = 3;
 const HOST = "35.202.234.53";
 const PORT = 8086;
 
@@ -28,7 +28,7 @@ export class Recorder {
         closeOnError: true,
         framesPerBuffer: 0,
         highwaterMark: 16000 * 4 * SECONDS_PER_INFERENCE,
-        maxQueue: 10,
+        maxQueue: 5,
       },
     });
 
@@ -79,24 +79,22 @@ export class Recorder {
   }
 
   start() {
-    if (this.ai) {
-      this.ai.quit();
-    }
-
+    this.allText = "";
     const ai = this.createAI();
-    const socket = this.createSocket();
+    this.createSocket();
 
-    //ai.pipe(socket);
     ai.start();
   }
 
   stop() {
     if (this.ai) {
       this.ai.quit();
+      this.ai.removeAllListeners();
       this.ai = null;
     }
     if (this.socket) {
       this.socket.end();
+      this.socket.removeAllListeners();
       this.socket = null;
     }
   }

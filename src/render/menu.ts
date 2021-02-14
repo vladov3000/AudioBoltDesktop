@@ -48,7 +48,7 @@ window.onload = () => {
     },
     stop: () => {
       toggleStartStopElements();
-      window.electronMenu.stop;
+      window.electronMenu.stop();
     },
     settings: window.electronMenu.settings,
     hide: window.electronMenu.hide,

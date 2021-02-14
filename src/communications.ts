@@ -25,7 +25,7 @@ export function setupCommunication(
   ipcMain.on("stop", () => {
     console.log("[menu] stop");
     recorder.stop();
-    subtitleWindow.setSize(0, INIT_SUBTITLE_FONT_SIZE);
+    subtitleWindow.setSize(0, config.subtitleFontSize);
 
     if (config.showTranscript && recorder.allText) {
       console.log("all text from recorder:");
