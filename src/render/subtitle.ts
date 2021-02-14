@@ -12,10 +12,8 @@ interface Window {
 const MAX_CHARS_PER_LINE = 30;
 const MAX_LINES = 2;
 
-const log = window.electronSubtitle.log;
-
 window.onerror = (e) => {
-  log(`Error: ${e}`);
+  window.electronSubtitle.log(`Error: ${e}`);
 };
 
 window.onload = () => {

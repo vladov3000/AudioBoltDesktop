@@ -4,6 +4,7 @@ interface Window {
     log: (text: string) => void;
     start: () => void;
     stop: () => void;
+    settings: () => void;
     hide: () => void;
     exit: () => void;
   };
@@ -16,6 +17,7 @@ window.onerror = (e) => {
 const menuItemActions = {
   start: window.electronMenu.start,
   stop: window.electronMenu.stop,
+  settings: window.electronMenu.settings,
   hide: window.electronMenu.hide,
   exit: window.electronMenu.exit,
 };

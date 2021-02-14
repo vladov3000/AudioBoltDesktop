@@ -9,11 +9,13 @@ export class Recorder {
   ai: portAudio.IoStreamRead | null;
   socket: net.Socket | null;
   onTextBack: (text: string) => void;
+  allText: string;
 
   constructor(onTextBack: (text: string) => void) {
-    this.onTextBack = onTextBack;
     this.ai = null;
     this.socket = null;
+    this.allText = "";
+    this.onTextBack = onTextBack;
   }
 
   createAI() {
@@ -67,6 +69,7 @@ export class Recorder {
     this.socket.on("data", (data) => {
       console.log(`[record] data from socket:`);
       console.log(data);
+      this.allText += data;
       this.onTextBack(data.toString());
     });
 

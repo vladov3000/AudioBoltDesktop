@@ -1,0 +1,25 @@
+body {
+  -webkit-app-region: drag;
+  background-color: #333;
+  margin: 0;
+  height: 420px;
+  width: 420px;
+  padding-top: 30px;
+  padding-left: 30px;
+}
+
+.line-container {
+  display: flex;
+  align-items: center;
+}
+
+input[type="checkbox"] {
+  transform: scale(1.5);
+}
+
+p {
+  color: white;
+  font-size: 20px;
+  font-family: arial;
+  margin-left: 10px;
+}

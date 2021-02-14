@@ -5,6 +5,7 @@ import { Recorder } from "./record";
 
 const [MENU_WIN_W, MENU_WIN_H] = [250, 50];
 const INIT_SUBTITLE_FONT_SIZE = 50;
+const [SETTINGS_WIN_W, SETTINGS_WIN_H] = [450, 450];
 
 app.on("ready", () => {
   const menuWindow = createMenuWindow();
@@ -34,7 +35,6 @@ function createMenuWindow() {
     menuWindow.show();
   });
 
-  // show menu window after hidden
   app.on("activate", () => {
     menuWindow.show();
   });
@@ -60,16 +60,39 @@ function createSubtitleWindow() {
   subtitleWindow.loadFile(path.join("static", "subtitle.html"));
 
   subtitleWindow.on("ready-to-show", () => {
-    if (!subtitleWindow) return;
     subtitleWindow.setPosition(500, 700);
   });
 
-  // show subtitle window after hidden
   app.on("activate", () => {
     subtitleWindow.show();
   });
 
   return subtitleWindow;
+}
+
+function createSettingsWindow() {
+  const settingsWindow = new BrowserWindow({
+    width: SETTINGS_WIN_W,
+    height: SETTINGS_WIN_H,
+    resizable: false,
+    frame: false,
+    show: false,
+    titleBarStyle: "hidden",
+    webPreferences: {
+      contextIsolation: true,
+      preload: path.join(__dirname, "preload", "settings.js"),
+    },
+  });
+
+  settingsWindow.loadFile(path.join("static", "settings.html"));
+
+  settingsWindow.on("ready-to-show", () => {
+    settingsWindow.show();
+  });
+
+  app.on("activate", () => {
+    settingsWindow.show();
+  });
 }
 
 function setupCommunication(
@@ -84,13 +107,24 @@ function setupCommunication(
   // Communcation with menu renderer
   ipcMain.on("start", () => {
     console.log("[menu] start");
-    // addSubtitle(subtitleWindow, "hello world ");
     recorder.start();
   });
 
   ipcMain.on("stop", () => {
     console.log("[menu] stop");
     recorder.stop();
+    if (config?.showTranscript) {
+      console.log(recorder.allText);
+    }
+  });
+
+  let settingsWindowCreated = false;
+  ipcMain.on("settings", () => {
+    console.log("[menu] settings");
+    if (!settingsWindowCreated) {
+      createSettingsWindow();
+      settingsWindowCreated = true;
+    }
   });
 
   ipcMain.on("hide", () => {
@@ -108,12 +142,20 @@ function setupCommunication(
 
   // Communication with subtitle renderer
   ipcMain.on("resize", (_, w: number, h: number) => {
-    console.log("[subtitle] resize");
+    console.log(`[subtitle] resize to ${w} ${h}`);
 
     w = Math.floor(w);
     h = Math.floor(h);
 
     subtitleWindow.setSize(w, h);
+  });
+
+  // Communication with settings renderer
+  let config: Config | null = null;
+  ipcMain.on("config", (_, newConfig: Config) => {
+    console.log("[settings] new config:");
+    console.log(newConfig);
+    config = newConfig;
   });
 }
 
