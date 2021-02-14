@@ -17,7 +17,6 @@ window.onload = () => {
   const config: Config = {
     showTranscript: false,
   };
-  window.electronSettings.setConfig(config);
 
   const showTranscriptCheckbox = document.getElementById(
     "show-transcript"

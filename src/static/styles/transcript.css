@@ -1,0 +1,13 @@
+body {
+  background-color: #333;
+  margin: 0;
+  overflow: hidden;
+  padding: 2px;
+}
+
+p {
+  color: white;
+  font-size: 15px;
+  font-family: arial;
+  margin-left: 10px;
+}

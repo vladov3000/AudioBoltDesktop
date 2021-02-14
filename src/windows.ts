@@ -2,8 +2,9 @@ import { BrowserWindow, app } from "electron";
 import * as path from "path";
 
 const [MENU_WIN_W, MENU_WIN_H] = [250, 50];
-const INIT_SUBTITLE_FONT_SIZE = 50;
+export const INIT_SUBTITLE_FONT_SIZE = 50;
 const [SETTINGS_WIN_W, SETTINGS_WIN_H] = [450, 450];
+const [TRANSCRIPT_WIN_W, TRANSCRIPT_WIN_H] = [700, 400];
 
 export function createMenuWindow() {
   const menuWindow = new BrowserWindow({
@@ -83,4 +84,26 @@ export function createSettingsWindow() {
   app.on("activate", () => {
     settingsWindow.show();
   });
+
+  return settingsWindow;
+}
+
+export function createTranscriptWindow() {
+  const transcriptWindow = new BrowserWindow({
+    width: TRANSCRIPT_WIN_W,
+    height: TRANSCRIPT_WIN_H,
+    show: false,
+    webPreferences: {
+      contextIsolation: true,
+      preload: path.join(__dirname, "preload", "transcript.js"),
+    },
+  });
+
+  transcriptWindow.loadFile(path.join("static", "transcript.html"));
+
+  transcriptWindow.on("ready-to-show", () => {
+    transcriptWindow.show();
+  });
+
+  return transcriptWindow;
 }

@@ -1,6 +1,10 @@
 import { BrowserWindow, ipcMain, app } from "electron";
 import { Recorder } from "./record";
-import { createSettingsWindow } from "./windows";
+import {
+  createSettingsWindow,
+  createTranscriptWindow,
+  INIT_SUBTITLE_FONT_SIZE,
+} from "./windows";
 
 export function setupCommunication(
   menuWindow: BrowserWindow,
@@ -20,8 +24,16 @@ export function setupCommunication(
   ipcMain.on("stop", () => {
     console.log("[menu] stop");
     recorder.stop();
-    if (config?.showTranscript) {
+    subtitleWindow.setSize(0, INIT_SUBTITLE_FONT_SIZE);
+
+    if (config.showTranscript && recorder.allText) {
+      console.log("all text from recorder:");
       console.log(recorder.allText);
+
+      const transcriptWindow = createTranscriptWindow();
+      transcriptWindow.on("ready-to-show", () => {
+        writeTranscript(transcriptWindow, recorder.allText);
+      });
     }
   });
 
@@ -58,10 +70,13 @@ export function setupCommunication(
   });
 
   // Communication with settings renderer
-  let config: Config | null = null;
+  let config: Config = {
+    showTranscript: false,
+  };
   ipcMain.on("config", (_, newConfig: Config) => {
     console.log("[settings] new config:");
     console.log(newConfig);
+
     config = newConfig;
   });
 }
@@ -71,4 +86,8 @@ export function addSubtitle(subtitleWindow: BrowserWindow, subtitle: string) {
     subtitleWindow.showInactive();
   }
   subtitleWindow.webContents.send("newSubtitle", subtitle);
+}
+
+function writeTranscript(transcriptWindow: BrowserWindow, transcript: string) {
+  transcriptWindow.webContents.send("transcript", transcript);
 }
