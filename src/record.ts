@@ -2,7 +2,7 @@ import { Socket } from "dgram";
 import * as portAudio from "naudiodon";
 import * as net from "net";
 
-const SECONDS_PER_INFERENCE = 5;
+const SECONDS_PER_INFERENCE = 20;
 
 export class Recorder {
   ai: portAudio.IoStreamRead | null;
@@ -24,7 +24,7 @@ export class Recorder {
         deviceId: 2,
         closeOnError: true,
         framesPerBuffer: 0,
-        highwaterMark: 16000 * SECONDS_PER_INFERENCE,
+        highwaterMark: 16000 * 4 * SECONDS_PER_INFERENCE,
         maxQueue: 1,
       },
     });
