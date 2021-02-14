@@ -8,11 +8,13 @@ import wave
 class TestTCPHandler(socketserver.BaseRequestHandler):
     def handle(self):
         while (1):
+            # get len
             chunk = self.request.recv(1024).strip()
             target_len = struct.unpack('>i', chunk[:4])[0]
             print(f"Target len: {target_len}")
-
             data = chunk[4:]
+
+            # get rest of the chunks
             while len(data) < target_len:
                 chunk = self.request.recv(1024)
                 data += chunk
@@ -32,6 +34,7 @@ class TestTCPHandler(socketserver.BaseRequestHandler):
         timestamp = strftime("%Y%m%d%H%M%S", gmtime())
         out_filename = os.path.join(
             speech_save_dir, timestamp + "_" + self.client_address[0] + ".wav")
+
         # write to wav file
         file = wave.open(out_filename, 'wb')
         file.setnchannels(1)
