@@ -41,8 +41,11 @@ export function setupCommunication(
   let settingsWindowCreated = false;
   ipcMain.on("settings", () => {
     console.log("[menu] settings");
+
     if (!settingsWindowCreated) {
-      createSettingsWindow();
+      const settingsWindow = createSettingsWindow();
+      setInitConfig(settingsWindow, config);
+
       settingsWindowCreated = true;
     }
   });
@@ -88,4 +91,10 @@ export function addSubtitle(subtitleWindow: BrowserWindow, subtitle: string) {
 
 function writeTranscript(transcriptWindow: BrowserWindow, transcript: string) {
   transcriptWindow.webContents.send("transcript", transcript);
+}
+
+function setInitConfig(settingsWindow: BrowserWindow, config: Config) {
+  settingsWindow.webContents.on("did-finish-load", () =>
+    settingsWindow.webContents.send("initconfig", JSON.stringify(config))
+  );
 }
