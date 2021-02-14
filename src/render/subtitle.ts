@@ -9,13 +9,14 @@ interface Window {
   };
 }
 
+const MAX_CHARS_PER_LINE = 30;
+const MAX_LINES = 2;
+
 const log = window.electronSubtitle.log;
 
 window.onerror = (e) => {
   log(`Error: ${e}`);
 };
-
-const MAX_LINES = 2;
 
 window.onload = () => {
   const subtitleElement = document.getElementById(
@@ -30,9 +31,8 @@ window.onload = () => {
 };
 
 function addText(subtitleElement: HTMLSpanElement, text: string) {
-  subtitleElement.innerText += text;
-
-  let lines = subtitleElement.innerText.split("\n");
+  const lines = splitToFitMaxChars(subtitleElement.innerText + text);
+  subtitleElement.innerText = lines.join();
 
   let delta = lines.length - 1 - MAX_LINES;
   if (delta > 0) {
@@ -50,4 +50,38 @@ function updateWindowSize(subtitleElement: HTMLSpanElement) {
 
   document.body.style.width = `${w}px`;
   document.body.style.height = `${h}px`;
+}
+
+function splitToFitMaxChars(
+  text: string,
+  maxCharsPerLine = MAX_CHARS_PER_LINE
+) {
+  if (text.length <= maxCharsPerLine) {
+    return [text];
+  }
+
+  const lines = text
+    .split("\n")
+    .map((line) => {
+      let res = [];
+
+      while (line.length > maxCharsPerLine) {
+        // find end of last word before max chars for length
+        let end = maxCharsPerLine;
+        while (!(line[end] != " " && line[end + 1] == " ")) {
+          end--;
+        }
+        end += 2;
+
+        // push small sentence to res
+        res.push(line.slice(0, end));
+        line = line.slice(end);
+      }
+
+      res.push(line);
+      return res;
+    })
+    .flat();
+
+  return lines;
 }

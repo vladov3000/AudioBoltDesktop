@@ -9,7 +9,8 @@
     "electron": "electron dist/main.js",
     "start": "npm run build && npm run electron",
     "watch": "nodemon -w src -e '*.ts' -x 'npm run build'",
-    "rebuild": "$(npm bin)/electron-rebuild"
+    "rebuild": "$(npm bin)/electron-rebuild",
+    "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'tests/**/*.ts' && open tests/results.html"
   },
   "dependencies": {
     "electron": "^11.0.0",

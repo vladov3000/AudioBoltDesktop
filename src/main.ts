@@ -84,6 +84,7 @@ function setupCommunication(
   // Communcation with menu renderer
   ipcMain.on("start", () => {
     console.log("[menu] start");
+    // addSubtitle(subtitleWindow, "hello world ");
     recorder.start();
   });
 

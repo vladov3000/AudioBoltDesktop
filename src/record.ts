@@ -2,7 +2,7 @@ import { Socket } from "dgram";
 import * as portAudio from "naudiodon";
 import * as net from "net";
 
-const SECONDS_PER_INFERENCE = 20;
+const SECONDS_PER_INFERENCE = 5;
 const HOST = "104.154.202.254";
 const PORT = 8086;
 

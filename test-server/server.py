@@ -20,7 +20,7 @@ class TestTCPHandler(socketserver.BaseRequestHandler):
                 data += chunk
 
             # write to file
-            filename = self._write_to_file(data)
+            # filename = self._write_to_file(data)
             self.request.send(b"hello world")
 
     def _write_to_file(self, data):
