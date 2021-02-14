@@ -9,7 +9,8 @@ import {
 export function setupCommunication(
   menuWindow: BrowserWindow,
   subtitleWindow: BrowserWindow,
-  recorder: Recorder
+  recorder: Recorder,
+  config: Config
 ) {
   ipcMain.on("log", (_, source: string, text: string) => {
     console.log(`[${source}] ${text}`);
@@ -70,9 +71,6 @@ export function setupCommunication(
   });
 
   // Communication with settings renderer
-  let config: Config = {
-    showTranscript: false,
-  };
   ipcMain.on("config", (_, newConfig: Config) => {
     console.log("[settings] new config:");
     console.log(newConfig);

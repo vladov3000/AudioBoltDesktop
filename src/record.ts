@@ -2,7 +2,7 @@ import * as portAudio from "naudiodon";
 import * as net from "net";
 
 const SECONDS_PER_INFERENCE = 10;
-const HOST = "104.154.202.254";
+const HOST = "35.202.234.53";
 const PORT = 8086;
 
 export class Recorder {
