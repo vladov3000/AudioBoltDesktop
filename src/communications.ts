@@ -79,6 +79,7 @@ export function setupCommunication(
     console.log(newConfig);
 
     config = newConfig;
+    subtitleWindow.setSize(subtitleWindow.getSize[0], config.subtitleFontSize);
   });
 }
 
