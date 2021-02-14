@@ -21,6 +21,9 @@ export class Recorder {
         sampleRate: 16000,
         deviceId: 2,
         closeOnError: true,
+        framesPerBuffer: 0,
+        highwaterMark: 16000 * 3, // 3 second buffers sent at a time
+        maxQueue: 1,
       },
     });
 
@@ -41,6 +44,7 @@ export class Recorder {
           data.length & 0x000000ff,
         ]);
         this.socket.write(bufferSize);
+        this.socket.write(data);
       }
     });
 
@@ -70,24 +74,22 @@ export class Recorder {
     if (this.ai) {
       this.ai.quit();
     }
-    if (this.socket) {
-      this.socket.end();
-    }
 
     const ai = this.createAI();
     const socket = this.createSocket();
 
-    ai.pipe(socket);
+    //ai.pipe(socket);
     ai.start();
-    setTimeout(ai.read, 1000);
   }
 
   stop() {
     if (this.ai) {
       this.ai.quit();
+      this.ai = null;
     }
     if (this.socket) {
       this.socket.end();
+      this.socket = null;
     }
   }
 }

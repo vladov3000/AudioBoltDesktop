@@ -7,22 +7,24 @@ import wave
 
 class TestTCPHandler(socketserver.BaseRequestHandler):
     def handle(self):
-        chunk = self.request.recv(1024).strip()
-        target_len = struct.unpack('>i', chunk[:4])[0]
-        print(f"Target len: {target_len}")
+        while (1):
+            chunk = self.request.recv(1024).strip()
+            target_len = struct.unpack('>i', chunk[:4])[0]
+            print(f"Target len: {target_len}")
 
-        data = chunk[4:]
-        while len(data) < target_len:
-            chunk = self.request.recv(1024)
-            data += chunk
+            data = chunk[4:]
+            while len(data) < target_len:
+                chunk = self.request.recv(1024)
+                data += chunk
 
-        # write to file
-        filename = self._write_to_file(data)
-        self.request.send(b"hello world")
+            # write to file
+            filename = self._write_to_file(data)
+            self.request.send(b"hello world")
 
     def _write_to_file(self, data):
         # prepare save dir and filename
-        speech_save_dir = os.path.join(os.path.dirname(__file__), "temp-audio")
+        speech_save_dir = os.path.join(os.path.dirname(__file__),
+                                       "./temp-audio")
 
         if not os.path.exists(speech_save_dir):
             os.mkdir(speech_save_dir)
