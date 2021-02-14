@@ -1,7 +1,7 @@
 import * as portAudio from "naudiodon";
 import * as net from "net";
 
-const SECONDS_PER_INFERENCE = 3;
+const SECONDS_PER_INFERENCE = 10;
 const HOST = "104.154.202.254";
 const PORT = 8086;
 
@@ -28,7 +28,7 @@ export class Recorder {
         closeOnError: true,
         framesPerBuffer: 0,
         highwaterMark: 16000 * 4 * SECONDS_PER_INFERENCE,
-        maxQueue: 1,
+        maxQueue: 10,
       },
     });
 
@@ -68,9 +68,11 @@ export class Recorder {
 
     this.socket.on("data", (data) => {
       console.log(`[record] data from socket:`);
-      console.log(data);
+      const dataStr = data.toString() + " ";
+      console.log(dataStr);
+
       this.allText += data;
-      this.onTextBack(data.toString());
+      this.onTextBack(dataStr);
     });
 
     return this.socket;

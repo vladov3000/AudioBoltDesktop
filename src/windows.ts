@@ -66,9 +66,9 @@ export function createSettingsWindow() {
     width: SETTINGS_WIN_W,
     height: SETTINGS_WIN_H,
     resizable: false,
-    frame: false,
+    //frame: false,
     show: false,
-    titleBarStyle: "hidden",
+    //titleBarStyle: "hidden",
     webPreferences: {
       contextIsolation: true,
       preload: path.join(__dirname, "preload", "settings.js"),

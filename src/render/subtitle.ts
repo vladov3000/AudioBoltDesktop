@@ -29,7 +29,7 @@ window.onload = () => {
 };
 
 function addText(subtitleElement: HTMLSpanElement, text: string) {
-  const lines = splitToFitMaxChars(subtitleElement.innerText + text);
+  const lines = splitToFitMaxChars(`${subtitleElement.innerText} ${text}`);
   subtitleElement.innerText = lines.join();
 
   let delta = lines.length - 1 - MAX_LINES;
